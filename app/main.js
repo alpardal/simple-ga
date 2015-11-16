@@ -1,4 +1,6 @@
 import {App} from './app';
 
-const app = App.create();
-app.init();
+const poolContainer = document.getElementById('gene-pool'),
+      targetContainer = document.getElementById('target'),
+      app = App.create(targetContainer, poolContainer);
+app.start();

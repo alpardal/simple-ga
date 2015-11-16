@@ -1,0 +1,22 @@
+div {
+    display: inline-block;
+    float: left;
+    margin-right: 5px;
+}
+
+table {
+    margin-top: -3px;
+}
+
+canvas {
+    margin-right: 4px;
+}
+
+#target canvas {
+    display: inherit;
+    margin-bottom: 6px;
+}
+
+#target canvas:last-child {
+    border: solid medium green
+}
