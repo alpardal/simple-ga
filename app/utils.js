@@ -1,3 +1,5 @@
+import {Color} from './color';
+
 const Utils = {
 
     sample(array) {
@@ -5,26 +7,50 @@ const Utils = {
         return array[index];
     },
 
-    minBy(transform, items) {
+    fillArray(size, generator) {
+        const array = [];
+
+        for (let i = 0; i < size; i++) {
+            array.push(generator(i));
+        }
+
+        return array;
+    },
+
+    maxBy(transform, items) {
         return items.map(i => (
             {item: i, value: transform(i)}
         )).reduce((best, current) => (
-            (current.value < best.value) ? current : best
+            (current.value > best.value) ? current : best
         )).item;
     },
 
-    imageDifference(image1, image2) {
-        const data1 = image1.getImageData().data,
-            data2 = image2.getImageData().data;
-        let differences = 0;
+    shallowCopy(array) {
+        const copy = [];
+        array.forEach(e => copy.push(e));
+        return copy;
+    },
 
-        for (let i = 0; i < data1.length; i++) {
-            if (data1[i] !== data2[i]) {
-                differences += 1;
-            }
+    imageDifference(image1, image2) {
+        let score = image1.length * Color.MAX_YUV_DISTANCE;
+
+        for (let i = 0; i < image1.length; i++) {
+            score -= Color.distance(image1[i], image2[i]);
         }
 
-        return differences;
+        return score;
+    },
+
+    indexByProbabilities(probs) {
+        const prob = Math.random();
+        let accu = probs[0],
+            i = 0;
+
+        while (accu < prob) {
+            accu += probs[++i];
+        }
+
+        return i;
     }
 };
 

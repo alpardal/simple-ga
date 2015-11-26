@@ -1,78 +1,58 @@
-import {Canvas} from './canvas';
 import {GA} from './ga';
 import {Utils} from './utils';
-
-const image_path = 'images/Yosemite_Falls_small.jpg';
-const poolSize = 6;
+import {Color} from './color';
 
 const proto = {
 
     start() {
-        this.img = new Image();
-        this.img.onload = this.imageLoaded.bind(this);
-        this.img.src = image_path;
-        this.pool = [];
-    },
+        this.targetImage = this.view.getTargetImage();
+        this.fitnessFunction = Utils.imageDifference.bind(null, this.targetImage);
+        this.ga = GA.create(this.fitnessFunction);
+        this.setPopulation(Utils.fillArray(App.POPULATION_SIZE,
+          ()=> Utils.fillArray(this.targetImage.length, Color.randomYuvColor)));
 
-    imageLoaded() {
-        this.targetImageCanvas = Canvas.create(this.img.width, this.img.height);
-        this.targetImageCanvas.setImage(this.img);
-        this.targetImageCanvas.addTo(this.targetContainer);
-        this.currentBestCanvas = Canvas.create(this.img.width, this.img.height);
-        this.currentBestCanvas.addTo(this.targetContainer);
-        this.ga = GA.create(this.targetImageCanvas);
-        this.fitnessFunction = Utils.imageDifference.bind(null,
-                                                          this.targetImageCanvas);
-
-        const table = document.createElement('table');
-        let row, col;
-
-        for (let i = 0; i < poolSize; i++) {
-            if (i % 2 === 0) {
-                row = document.createElement('tr');
-                table.appendChild(row);
-            }
-
-            this.pool[i] = Canvas.createRandom(this.img.width, this.img.height);
-
-            col = document.createElement('td');
-            this.pool[i].addTo(col);
-            row.appendChild(col);
-        }
-
-        this.poolContainer.appendChild(table);
-
-        this.run();
+        this.render();
+        window.step = this.step.bind(this);
+        window.run = this.run.bind(this);
     },
 
     run() {
         this.step();
-        // setTimeout(this.run.bind(this), 100);
+        requestAnimationFrame(this.run.bind(this));
     },
 
     step() {
-        this.calculatePoolFitness();
-        this.setBest();
+        this.update();
+        this.render();
     },
 
-    calculatePoolFitness() {
-        this.pool.forEach(genome => {
-            genome.fitness = this.fitnessFunction(genome);
-        });
+    update() {
+        generations++;
+        this.setPopulation(this.ga.nextGeneration(this.population));
     },
 
-    setBest() {
-        const best = Utils.minBy(g => g.fitness, this.pool);
-        this.currentBestCanvas.setImageData(best.getImageData());
+    render() {
+        if (generations % 10 === 0) {
+            console.log('best is: ' + this.best.fitness);
+        }
+        this.view.render(this);
+    },
+
+    setPopulation(population) {
+        this.population = population;
+        this.best = Utils.maxBy(p => p.fitness, this.population);
     }
 };
 
+let generations = 0;
+
 const App = {
-    create(targetContainer, poolContainer) {
+    create(view) {
         return Object.assign(Object.create(proto),
-                            {targetContainer: targetContainer,
-                             poolContainer: poolContainer});
-    }
+                             {view: view});
+    },
+
+    POPULATION_SIZE: 8
 };
 
 

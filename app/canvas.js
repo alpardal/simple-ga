@@ -1,3 +1,5 @@
+import {Color} from './color';
+
 const proto = {
 
     init() {
@@ -15,43 +17,41 @@ const proto = {
         domContainer.appendChild(this.domCanvas);
     },
 
-    getImageData() {
-        return this.ctx.getImageData(0, 0, this.width, this.height);
+    getYuvImage() {
+        const imageData = this.ctx.getImageData(0, 0, this.width, this.height).data,
+              yuvData = [];
+
+        for (let i = 0; i < imageData.length; i += 4) {
+            const color = [imageData[i], imageData[i+1], imageData[i+2]];
+            yuvData.push(Color.rgbToYuv(color));
+        }
+
+        return yuvData;
     },
 
-    createImageData() {
-        return this.ctx.createImageData(this.width, this.height);
-    },
+    setYuvImage(yuvImage) {
+        const imageData = this.ctx.createImageData(this.width, this.height),
+              data = imageData.data;
 
-    setImageData(imageData) {
+        for (let i = 0; i < yuvImage.length; i++) {
+            const dataIndex = i*4,
+                  color = Color.yuvToRgb(yuvImage[i]);
+            data[dataIndex] = color[0];
+            data[dataIndex+1] = color[1];
+            data[dataIndex+2] = color[2];
+            data[dataIndex+3] = 255; // alpha
+        }
+
         this.ctx.putImageData(imageData, 0, 0);
     }
 };
 
 const Canvas = {
     create(width, height) {
-        var canvas = Object.create(proto);
+        const canvas = Object.create(proto);
         canvas.width = width;
         canvas.height = height;
         canvas.init();
-
-        return canvas;
-    },
-
-    createRandom(width, height) {
-        var canvas = Canvas.create(width, height);
-
-        var img = canvas.createImageData(),
-            data = img.data;
-
-        for (var i = 0; (i+3) < data.length; i += 4) {
-            data[i] = Math.random() * 255; // r
-            data[i+1] = Math.random() * 255; // g
-            data[i+2] = Math.random() * 255; // b
-            data[i+3] = 255; // a
-        }
-
-        canvas.setImageData(img);
 
         return canvas;
     }
