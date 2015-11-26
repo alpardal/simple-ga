@@ -7,13 +7,11 @@ const proto = {
     start() {
         this.targetImage = this.view.getTargetImage();
         this.fitnessFunction = Utils.imageDifference.bind(null, this.targetImage);
-        this.ga = GA.create(this.fitnessFunction);
         this.setPopulation(Utils.fillArray(App.POPULATION_SIZE,
           ()=> Utils.fillArray(this.targetImage.length, Color.randomYuvColor)));
 
         this.render();
-        window.step = this.step.bind(this);
-        window.run = this.run.bind(this);
+        this.run();
     },
 
     run() {
@@ -28,7 +26,7 @@ const proto = {
 
     update() {
         generations++;
-        this.setPopulation(this.ga.nextGeneration(this.population));
+        this.setPopulation(GA.nextGeneration(this.population));
     },
 
     render() {
@@ -40,6 +38,7 @@ const proto = {
 
     setPopulation(population) {
         this.population = population;
+        this.population.forEach(p => p.fitness = this.fitnessFunction(p));
         this.best = Utils.maxBy(p => p.fitness, this.population);
     }
 };

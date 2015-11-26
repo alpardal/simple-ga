@@ -25,12 +25,6 @@ const Utils = {
         )).item;
     },
 
-    shallowCopy(array) {
-        const copy = [];
-        array.forEach(e => copy.push(e));
-        return copy;
-    },
-
     imageDifference(image1, image2) {
         let score = image1.length * Color.MAX_YUV_DISTANCE;
 
