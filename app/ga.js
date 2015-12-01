@@ -9,7 +9,9 @@ const GA = {
 
         return Utils.fillArray(population.length, ()=> {
             let p1 = this.selectParent(population),
-                p2 = this.selectParent(population);
+                p2 = p1;
+            while (p2 === p1) { p2 = this.selectParent(population); }
+
             return this.breed(p1, p2);
         });
     },
