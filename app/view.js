@@ -1,7 +1,7 @@
 import {Canvas} from './canvas';
 import {App} from './app';
 
-const image_path = 'images/Yosemite_Falls_small.jpg';
+const image_path = 'images/Yosemite_Falls_small_bw.jpg';
 const NUMBER_OF_CANVASES = 4;
 
 const proto = {

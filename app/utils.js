@@ -1,4 +1,3 @@
-import {Color} from './color';
 
 const Utils = {
 
@@ -33,7 +32,7 @@ const Utils = {
         let score = 0;
 
         for (let i = 0; i < image1.length; i++) {
-            score += Color.distance(image1[i], image2[i]);
+            score += Math.abs(image1[i] - image2[i]);
         }
 
         return score;

@@ -1,6 +1,5 @@
 import {GA} from './ga';
 import {Utils} from './utils';
-import {Color} from './color';
 
 const proto = {
 
@@ -8,7 +7,7 @@ const proto = {
         this.targetImage = this.view.getTargetImage();
         this.fitnessFunction = (i) => (1/(1+Utils.imageDifference(this.targetImage, i)));
         this.setPopulation(Utils.fillArray(App.POPULATION_SIZE,
-          ()=> Utils.fillArray(this.targetImage.length, Color.randomYuvColor)));
+          ()=> Utils.fillArray(this.targetImage.length, Utils.randInt.bind(null, 256))));
 
         this.render();
         this.run();

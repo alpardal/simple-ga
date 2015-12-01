@@ -1,5 +1,4 @@
 import {Utils} from './utils';
-import {Color} from './color';
 
 const GA = {
 
@@ -45,7 +44,7 @@ const GA = {
 
 function mutate(genome, index) {
     if (Math.random() < GA.MUTATION_PROB) {
-        genome[index] = Color.randomYuvColor();
+        genome[index] = Utils.randInt(256);
     }
 }
 

@@ -1,5 +1,3 @@
-import {Color} from './color';
-
 const proto = {
 
     init() {
@@ -22,8 +20,7 @@ const proto = {
               yuvData = [];
 
         for (let i = 0; i < imageData.length; i += 4) {
-            const color = [imageData[i], imageData[i+1], imageData[i+2]];
-            yuvData.push(Color.rgbToYuv(color));
+            yuvData.push(imageData[i]);
         }
 
         return yuvData;
@@ -33,14 +30,14 @@ const proto = {
         const imageData = this.ctx.createImageData(this.width, this.height),
               data = imageData.data;
 
-        for (let i = 0; i < yuvImage.length; i++) {
-            const dataIndex = i*4,
-                  color = Color.yuvToRgb(yuvImage[i]);
-            data[dataIndex] = color[0];
-            data[dataIndex+1] = color[1];
-            data[dataIndex+2] = color[2];
+        yuvImage.forEach(function(c, i){
+            const dataIndex = i*4;
+
+            data[dataIndex] = c;
+            data[dataIndex+1] = c;
+            data[dataIndex+2] = c;
             data[dataIndex+3] = 255; // alpha
-        }
+        });
 
         this.ctx.putImageData(imageData, 0, 0);
     }
