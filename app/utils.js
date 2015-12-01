@@ -32,7 +32,7 @@ const Utils = {
         let score = 0;
 
         for (let i = 0; i < image1.length; i++) {
-            score += Math.abs(image1[i] - image2[i]);
+            score += Math.pow(image1[i] - image2[i], 2);
         }
 
         return score;
