@@ -2,6 +2,7 @@ import {Canvas} from './canvas';
 import {App} from './app';
 
 const image_path = 'images/Yosemite_Falls_small.jpg';
+const NUMBER_OF_CANVASES = 4;
 
 const proto = {
 
@@ -13,7 +14,7 @@ const proto = {
     },
 
     render(app) {
-        app.population.forEach((p, i) => this.populationCanvases[i].setYuvImage(p));
+        this.populationCanvases.forEach((c, i) => c.setYuvImage(app.population[i]));
         this.currentBestCanvas.setYuvImage(app.best);
     },
 
@@ -30,7 +31,7 @@ const proto = {
         const table = document.createElement('table');
         let row, col;
 
-        for (let i = 0; i < App.POPULATION_SIZE; i++) {
+        for (let i = 0; i < NUMBER_OF_CANVASES; i++) {
             if (i % 2 === 0) {
                 row = document.createElement('tr');
                 table.appendChild(row);

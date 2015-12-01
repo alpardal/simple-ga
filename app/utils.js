@@ -2,6 +2,10 @@ import {Color} from './color';
 
 const Utils = {
 
+    randInt(max) {
+        return Math.floor(Math.random * max);
+    },
+
     sample(array) {
         const index = Math.random() * array.length | 0;
         return array[index];
@@ -26,10 +30,10 @@ const Utils = {
     },
 
     imageDifference(image1, image2) {
-        let score = image1.length * Color.MAX_YUV_DISTANCE;
+        let score = 0;
 
         for (let i = 0; i < image1.length; i++) {
-            score -= Color.distance(image1[i], image2[i]);
+            score += Color.distance(image1[i], image2[i]);
         }
 
         return score;

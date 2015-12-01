@@ -1,70 +1,50 @@
 import {Utils} from './utils';
+import {Color} from './color';
 
 const GA = {
 
     nextGeneration(population) {
-        const parents = this.selectParents(population);
+        population.totalFitness = population.reduce((sum, p) => sum + p.fitness, 0);
+        population.probabilities = population.map(p => p.fitness/population.totalFitness);
 
         return Utils.fillArray(population.length, ()=> {
-            return this.breed(Utils.sample(parents), Utils.sample(parents))[0];
+            let p1 = this.selectParent(population),
+                p2 = this.selectParent(population);
+            return this.breed(p1, p2);
         });
     },
 
-    selectParents(population) {
-        const numberOfParents = 3,
-              parents = [],
-              probabilities = [],
-              totalFitness = population.reduce((sum, p) => sum + p.fitness, 0);
+    selectParent(population) {
+        let parentIndex = Utils.indexByProbabilities(population.probabilities);
 
-        population.forEach(p => probabilities.push(p.fitness/totalFitness));
-
-        for (let i = 0; i < numberOfParents; i++) {
-            parents.push(population[Utils.indexByProbabilities(probabilities)]);
-        }
-
-        return parents;
+        return population[parentIndex];
     },
 
     breed(parent1, parent2) {
-        const child1 = [],
-              child2 = [],
-              partitions = 300,
-              partitionPoints = [];
-
-        let partTemp = 0;
-
-        for (let i = 0; i < partitions; i++) {
-            partTemp += Math.random() * (parent1.length - partTemp) | 0;
-            partitionPoints.push(partTemp);
-        }
-
-        let currentPartition = 0, flipped = false;
+        let parents = (Math.random() < 0.5) ? [parent1, parent2] : [parent2, parent1],
+            crossoverPoint = Utils.randInt(parents.length-1),
+            child = [];
 
         for (let i = 0; i < parent1.length; i++) {
-            if (i > partitionPoints[currentPartition]) {
-                flipped = !flipped;
-                currentPartition++;
-            }
-
-            if (!flipped) {
-                child1.push(parent1[i]);
-                child2.push(parent2[i]);
+            if (i <= crossoverPoint) {
+                child.push(parents[0][i]);
             } else {
-                child1.push(parent2[i]);
-                child2.push(parent1[i]);
+                child.push(parents[1][i]);
             }
 
-           mutate(child1, i);
-           mutate(child2, i);
+           mutate(child, i);
         }
 
-        return [child1, child2];
+        return child;
     },
 
-    MUTATION_PROB: 0.0001
+    MUTATION_PROB: 0.05
 };
 
-function mutate(pop, index) {
+function mutate(genome, index) {
+    if (Math.random() < GA.MUTATION_PROB) {
+        genome[index] = Color.randomYuvColor();
+    }
 }
 
 

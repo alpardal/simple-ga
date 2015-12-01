@@ -6,7 +6,7 @@ const proto = {
 
     start() {
         this.targetImage = this.view.getTargetImage();
-        this.fitnessFunction = Utils.imageDifference.bind(null, this.targetImage);
+        this.fitnessFunction = (i) => (1/(1+Utils.imageDifference(this.targetImage, i)));
         this.setPopulation(Utils.fillArray(App.POPULATION_SIZE,
           ()=> Utils.fillArray(this.targetImage.length, Color.randomYuvColor)));
 
@@ -31,9 +31,9 @@ const proto = {
 
     render() {
         if (generations % 10 === 0) {
-            console.log('best is: ' + this.best.fitness);
+            console.log('after ' + generations + ' best is: ' + this.best.fitness);
+            this.view.render(this);
         }
-        this.view.render(this);
     },
 
     setPopulation(population) {
@@ -51,7 +51,7 @@ const App = {
                              {view: view});
     },
 
-    POPULATION_SIZE: 8
+    POPULATION_SIZE: 50
 };
 
 
