@@ -3,7 +3,7 @@ import {Color} from './color';
 const Utils = {
 
     randInt(max) {
-        return Math.floor(Math.random * max);
+        return Math.floor(Math.random() * max);
     },
 
     sample(array) {
