@@ -50,7 +50,7 @@ const App = {
                              {view: view});
     },
 
-    POPULATION_SIZE: 50
+    POPULATION_SIZE: 200
 };
 
 

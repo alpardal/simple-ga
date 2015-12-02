@@ -22,30 +22,39 @@ const GA = {
     },
 
     breed(parent1, parent2) {
-        let parents = (Math.random() < 0.5) ? [parent1, parent2] : [parent2, parent1],
-            crossoverPoint = Utils.randInt(parents.length-1),
-            child = [];
+        if (Math.random() < 0.9) {
 
-        for (let i = 0; i < parent1.length; i++) {
-            if (i <= crossoverPoint) {
-                child.push(parents[0][i]);
-            } else {
-                child.push(parents[1][i]);
+            let child = [];
+            // uniform crosssover:
+            for (let i = 0; i < parent1.length; i++) {
+                if (Math.random() < 0.5) {
+                    child.push(parent1[i]);
+                } else {
+                    child.push(parent2[i]);
+                }
             }
 
-           mutate(child, i);
+            return child;
+        } else {
+            return mutate(parent1);
         }
-
-        return child;
     },
 
-    MUTATION_PROB: 0.05
+    MUTATION_PROB: 0.0005
 };
 
-function mutate(genome, index) {
-    if (Math.random() < GA.MUTATION_PROB) {
-        genome[index] = Utils.randInt(256);
+function mutate(genome) {
+    let mutated = [];
+
+    for (let i = 0; i < genome.length; i++) {
+        if (Math.random() < GA.MUTATION_PROB) {
+            mutated.push(Utils.randInt(256));
+        } else {
+            mutated.push(genome[i]);
+        }
     }
+
+    return mutated;
 }
 
 
