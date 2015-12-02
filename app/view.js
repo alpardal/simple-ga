@@ -2,7 +2,7 @@ import {Canvas} from './canvas';
 import {App} from './app';
 
 const image_path = 'images/smiley_small.jpg';
-const NUMBER_OF_CANVASES = 4;
+const NUMBER_OF_CANVASES = 8;
 
 const proto = {
 

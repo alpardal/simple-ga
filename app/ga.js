@@ -1,18 +1,24 @@
 import {Utils} from './utils';
 
+const CONSERVE_RATIO = 0.1;
+
 const GA = {
 
     nextGeneration(population) {
+        const preserve = CONSERVE_RATIO * population.length,
+              sortedByFitness = population.sort((p1, p2) => p2.fitness - p1.fitness),
+              toPreserve = sortedByFitness.slice(0, preserve+1);
+
         population.totalFitness = population.reduce((sum, p) => sum + p.fitness, 0);
         population.probabilities = population.map(p => p.fitness/population.totalFitness);
 
-        return Utils.fillArray(population.length, ()=> {
+        return Utils.fillArray(population.length - toPreserve.length, ()=> {
             let p1 = this.selectParent(population),
                 p2 = p1;
             while (p2 === p1) { p2 = this.selectParent(population); }
 
             return this.breed(p1, p2);
-        });
+        }).concat(toPreserve);
     },
 
     selectParent(population) {
@@ -22,7 +28,7 @@ const GA = {
     },
 
     breed(parent1, parent2) {
-        if (Math.random() < 0.9) {
+        if (Math.random() < 0.75) {
 
             let child = [];
             // uniform crosssover:
@@ -40,7 +46,7 @@ const GA = {
         }
     },
 
-    MUTATION_PROB: 0.0005
+    MUTATION_PROB: 0.005
 };
 
 function mutate(genome) {

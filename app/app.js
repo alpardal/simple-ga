@@ -30,7 +30,7 @@ const proto = {
 
     render() {
         if (generations % 10 === 0) {
-            console.log('after ' + generations + ' best is: ' + this.best.fitness);
+            console.log(generations + ' geracoes, melhor fitness: ' + this.best.fitness);
             this.view.render(this);
         }
     },
