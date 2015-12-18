@@ -5,11 +5,6 @@ const Utils = {
         return Math.floor(Math.random() * max);
     },
 
-    sample(array) {
-        const index = Math.random() * array.length | 0;
-        return array[index];
-    },
-
     fillArray(size, generator) {
         const array = [];
 
