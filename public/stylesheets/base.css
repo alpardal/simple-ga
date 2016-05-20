@@ -25,3 +25,9 @@ canvas {
 #target canvas:last-child {
     border: solid medium green
 }
+
+.view-more {
+  clear: both;
+  margin-top: 280px;
+  padding-left: 5px;
+}
